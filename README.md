@@ -17,10 +17,16 @@
 
 ## Planned changes
 
-- [ ] Earth night time texture
-- [ ] Planet information panel
+- [ ] Asteroids and Comets
+- [ ] Information panel
 - [ ] Accuracy of distances
 - [ ] Improve shadow quality
+
+## Planet Scaling Issue
+
+Currently the planetary bodies are scaleed by $\sqrt{radius}/500$ and distance by ${distance}^{0.4}$, where radius is in kilometers and distance in millin kilometers
+
+This is not to scale and must be changed
 
 ## Setup
 
