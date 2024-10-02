@@ -164,7 +164,9 @@
   },
   {
     "name": "Rings of Saturn",
-    "radius": 3,
+    "radius": 0,
+    "innerRadius": 67300,
+    "outerRadius": 140300,
     "distance": 0,
     "period": 1,
     "daylength": 1,
