@@ -13,11 +13,13 @@ export interface Body {
   daylength: number;
   textures: TexturePaths;
   type: string;
-  tilt: number;
   orbits?: string;
   labels?: PointOfInterest[];
+  tilt: number;
   traversable: boolean;
   offset?: number;
+  innerRadius: number;
+  outerRadius: number;
 }
 
 interface TexturePaths {
@@ -44,6 +46,8 @@ const degreesToRadians = (degrees: number): number => {
 export class PlanetaryObject {
   radius: number; // in km
   distance: number; // in million km
+  innerRadius: number; // in km
+  outerRadius: number; // in km
   period: number; // in days
   daylength: number; // in hours
   orbits?: string;
@@ -59,7 +63,7 @@ export class PlanetaryObject {
   labels: Label;
 
   constructor(body: Body) {
-    const { radius, distance, period, daylength, orbits, type, tilt } = body;
+    const { radius, distance, period, daylength, orbits, type, tilt, innerRadius, outerRadius } = body;
 
     this.radius = radius / 1000000;
     this.distance = distance;
@@ -69,6 +73,8 @@ export class PlanetaryObject {
     this.type = type;
     this.tilt = degreesToRadians(tilt);
     this.rng = body.offset ?? Math.random() * 2 * Math.PI;
+    this.innerRadius = innerRadius / 1000000;
+    this.outerRadius = outerRadius / 1000000;
 
     this.loadTextures(body.textures);
 
@@ -125,7 +131,7 @@ export class PlanetaryObject {
    */
   private createMesh = () => {
     if (this.type === "ring") {
-      return createRingMesh(this.map);
+      return createRingMesh(this.map, this.innerRadius, this.outerRadius);
     }
 
     const geometry = new THREE.SphereGeometry(this.radius, 64, 64);
