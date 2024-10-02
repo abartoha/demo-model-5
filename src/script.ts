@@ -65,20 +65,10 @@ document.getElementById("btn-next")?.addEventListener("click", () => {
 // Solar system
 const [solarSystem, planetNames] = createSolarSystem(scene);
 
-const changeFocus = (oldFocus: string, newFocus: string) => {
-  solarSystem[oldFocus].mesh.remove(camera);
-  solarSystem[newFocus].mesh.add(camera);
-  const minDistance = solarSystem[newFocus].getMinDistance();
-  controls.minDistance = minDistance;
-  fakeCamera.position.set(minDistance, minDistance / 3, 0);
-  solarSystem[oldFocus].labels.hidePOI();
-  solarSystem[newFocus].labels.showPOI();
-  (document.querySelector(".caption p") as HTMLElement).innerHTML = newFocus;
-};
 
 // Camera
 const aspect = sizes.width / sizes.height;
-const camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, aspect, 0.00000000001, 1000);
 camera.position.set(0, 20, 0);
 solarSystem["Sun"].mesh.add(camera);
 
@@ -90,6 +80,17 @@ controls.enableDamping = true;
 controls.enablePan = false;
 controls.minDistance = solarSystem["Sun"].getMinDistance();
 controls.maxDistance = 50;
+
+const changeFocus = (oldFocus: string, newFocus: string) => {
+  solarSystem[oldFocus].mesh.remove(camera);
+  solarSystem[newFocus].mesh.add(camera);
+  const minDistance = solarSystem[newFocus].getMinDistance();
+  controls.minDistance = minDistance;
+  fakeCamera.position.set(minDistance * 3, minDistance * 3, minDistance * 3);
+  solarSystem[oldFocus].labels.hidePOI();
+  solarSystem[newFocus].labels.showPOI();
+  (document.querySelector(".caption p") as HTMLElement).innerHTML = newFocus;
+};
 
 // Label renderer
 const labelRenderer = new CSS2DRenderer();
@@ -111,9 +112,9 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 const renderScene = new RenderPass(scene, camera);
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(sizes.width, sizes.height),
-  0.75,
+  1,
   0,
-  1
+  0.1
 );
 
 const bloomComposer = new EffectComposer(renderer);

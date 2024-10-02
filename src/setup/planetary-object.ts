@@ -35,15 +35,7 @@ interface Atmosphere {
 
 const timeFactor = 8 * Math.PI * 2; // 1s real-time => 8h simulation time
 
-const normaliseRadius = (radius: number): number => {
-  return Math.sqrt(radius) / 500;
-  // return radius / 50000;
-};
-
-const normaliseDistance = (distance: number): number => {
-  return Math.pow(distance, 0.4);
-  // return distance / 50000;
-};
+// TODO Make something happen here properly!
 
 const degreesToRadians = (degrees: number): number => {
   return (Math.PI * degrees) / 180;
@@ -69,8 +61,8 @@ export class PlanetaryObject {
   constructor(body: Body) {
     const { radius, distance, period, daylength, orbits, type, tilt } = body;
 
-    this.radius = normaliseRadius(radius);
-    this.distance = normaliseDistance(distance);
+    this.radius = radius / 1000000;
+    this.distance = distance;
     this.period = period;
     this.daylength = daylength;
     this.orbits = orbits;
@@ -225,6 +217,6 @@ export class PlanetaryObject {
    * @returns the minimum orbital control camera distance allowed.
    */
   getMinDistance = (): number => {
-    return this.radius * 3.5;
+    return this.radius * 0.5;
   };
 }
