@@ -20,6 +20,12 @@ export interface Body {
   offset?: number;
   innerRadius: number;
   outerRadius: number;
+  eccentricity: number;
+  inclination: number;
+  semiMajorAxis: number;
+  argPerigee: number;
+  raan: number;
+
 }
 
 interface TexturePaths {
@@ -47,6 +53,7 @@ export class PlanetaryObject {
   radius: number; // in km
   distance: number; // in million km
   innerRadius: number; // in km
+  eccentricity: number;
   outerRadius: number; // in km
   period: number; // in days
   daylength: number; // in hours
@@ -61,9 +68,14 @@ export class PlanetaryObject {
   specularMap?: THREE.Texture;
   atmosphere: Atmosphere = {};
   labels: Label;
+  inclination: number;
+  semiMajorAxis: number;
+  semiLatusRectum: number;
+  argPerigee: number;
+  raan: number;
 
   constructor(body: Body) {
-    const { radius, distance, period, daylength, orbits, type, tilt, innerRadius, outerRadius } = body;
+    const { radius, distance, period, daylength, orbits, type, tilt, innerRadius, outerRadius, eccentricity, inclination, semiMajorAxis, argPerigee, raan } = body;
 
     this.radius = radius / 1000000;
     this.distance = distance;
@@ -75,6 +87,12 @@ export class PlanetaryObject {
     this.rng = body.offset ?? Math.random() * 2 * Math.PI;
     this.innerRadius = innerRadius / 1000000;
     this.outerRadius = outerRadius / 1000000;
+    this.eccentricity = eccentricity;
+    this.inclination = inclination;
+    this.semiMajorAxis = semiMajorAxis;
+    this.argPerigee = argPerigee;
+    this.raan = raan;
+    this.semiLatusRectum = this.semiMajorAxis * (1 - this.eccentricity ^ 2); 
 
     this.loadTextures(body.textures);
 
@@ -161,7 +179,7 @@ export class PlanetaryObject {
     }
 
     const sphere = new THREE.Mesh(geometry, material);
-    sphere.rotation.x = this.tilt;
+    // sphere.rotation.x = this.tilt; // The tilt that isn't a part of the keplerian mechanics
     sphere.castShadow = true;
     sphere.receiveShadow = true;
 
@@ -191,6 +209,7 @@ export class PlanetaryObject {
   };
 
   private getRotation = (elapsedTime: number) => {
+    // timeFactor converts the angle
     return this.daylength ? (elapsedTime * timeFactor) / this.daylength : 0;
   };
 
@@ -198,19 +217,67 @@ export class PlanetaryObject {
     return this.daylength ? (elapsedTime * timeFactor) / (this.period * 24) : 0;
   };
 
+  private propagate = (elapsedTime: number) => {
+    const mValue = (timeFactor / (this.period * 24)) * ((elapsedTime * timeFactor) % (this.period * 24)); // MeanAnomaly
+    var eA = 0;
+    const tol = 0.0001;  // tolerance
+    var eAo = mValue;  // initialize eccentric anomaly with mean anomaly
+    var ratio = 1;     // set ratio higher than the tolerance
+    while (Math.abs(ratio) > tol) {
+      var f_E = eAo - this.eccentricity * Math.sin(eAo) - mValue;
+      var f_Eprime = 1 - this.eccentricity * Math.cos(eAo);
+      ratio = f_E / f_Eprime;
+      if (Math.abs(ratio) > tol) {
+        eAo = eAo - ratio;
+      }
+      else
+        eA = eAo;
+    }
+    const tAnomaly =  2 * Math.atan(Math.sqrt((1 + this.eccentricity) / (1 - this.eccentricity)) * Math.tan(eA / 2)); // trueAnomaly
+    const r = this.semiLatusRectum / (1 + this.eccentricity * Math.cos(tAnomaly));  // Compute radial distance.
+
+    const x = r * (Math.cos(this.argPerigee + tAnomaly) * Math.cos(this.raan) - Math.cos(this.inclination) * Math.sin(this.argPerigee + tAnomaly) * Math.sin(this.raan));
+    const y = r * (Math.cos(this.argPerigee + tAnomaly) * Math.sin(this.raan) + Math.cos(this.inclination) * Math.sin(this.argPerigee + tAnomaly) * Math.cos(this.raan));
+    const z = r * (Math.sin(this.argPerigee + tAnomaly) * Math.sin(this.inclination));
+
+    return [x,y,z];
+  }
+
+  // private trueToEccentricAnomaly(f) {
+  //   // http://mmae.iit.edu/~mpeet/Classes/MMAE441/Spacecraft/441Lecture19.pdf slide 7 
+  //   var eccentricAnomaly = 2 * Math.atan(Math.sqrt((1 - this.eccentricity) / (1 + this.eccentricity)) * Math.tan(f / 2));
+  //   return eccentricAnomaly;
+  // }
+
   /**
    * Updates orbital position and rotation.
    * @param elapsedTime - number of seconds elapsed.
    */
   tick = (elapsedTime: number) => {
     // Convert real-time seconds to rotation.
+    if (this.type === "comet") {
+      // Do something for comets
+    }
+    
     const rotation = this.getRotation(elapsedTime);
     const orbitRotation = this.getOrbitRotation(elapsedTime);
     const orbit = orbitRotation + this.rng;
 
     // Circular rotation around orbit.
     this.mesh.position.x = Math.sin(orbit) * this.distance;
+    // this.mesh.position.y = Math.sin(orbit) * this.distance;
     this.mesh.position.z = Math.cos(orbit) * this.distance;
+
+    if (this.eccentricity > 0) {
+      // const 
+      console.log("We got orbit!");
+      console.log(this.eccentricity);
+      const [tx,ty,tz] = this.propagate(elapsedTime);
+      this.mesh.position.x = tz;
+      this.mesh.position.y = tx;
+      this.mesh.position.z = ty;
+      console.log(tx,ty,tz);
+    }
 
     if (this.type === "ring") {
       this.mesh.rotation.z = rotation;

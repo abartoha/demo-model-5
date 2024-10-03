@@ -11,7 +11,7 @@ export const createSolarSystem = (
   const solarSystem: SolarSystem = {};
   let textureCount = 0;
 
-  const planets: Body[] = planetData;
+  const planets : Body[] = planetData;
   const traversable: string[] = [];
 
   for (const planet of planets) {

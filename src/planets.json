@@ -52,6 +52,12 @@
     "orbits": "Sun",
     "tilt": 23.44,
     "traversable": true,
+    "eccentricity": 0.003,
+    "argPerigee": 102.94719,
+    "semiMajorAxis": 152,
+    "inclination": 0.00005,
+    "meanAnomalyEpoch": 100.47,
+    "raan": 0,
     "textures": {
       "map": "./textures/earth.jpg",
       "bump": "./textures/earth-bump.jpg",
