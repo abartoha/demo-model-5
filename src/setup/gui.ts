@@ -46,7 +46,7 @@ export const createGUI = (
     });
 
   // Control the simulation speed
-  gui.add(options, "speed", 0.1, 20, 0.1).name("Speed");
+  gui.add(options, "speed", 0.1, 10000, 0.1).name("Speed");
 
   gui.hide();
 
@@ -75,5 +75,16 @@ export const createGUI = (
   // Toggle GUI panel
   document.getElementById("btn-settings")?.addEventListener("click", () => {
     gui.show(gui._hidden);
+  });
+  const x = document.getElementById("info-panel");
+  document.getElementById("btn-info")?.addEventListener("click", () => {
+      if (x.checkVisibility()){
+        x.style.visibility = "hidden";
+      }
+      else {
+        x.style.visibility = 'visible';
+  
+      }
+    
   });
 };
