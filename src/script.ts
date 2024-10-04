@@ -68,7 +68,7 @@ const [solarSystem, planetNames] = createSolarSystem(scene);
 
 // Camera
 const aspect = sizes.width / sizes.height;
-const camera = new THREE.PerspectiveCamera(75, aspect, 0.00000000001, 1000);
+const camera = new THREE.PerspectiveCamera(75, aspect, 0.00000000001, 100000);
 camera.position.set(0, solarSystem["Sun"].getMinDistance() * 10, 0);
 solarSystem["Sun"].mesh.add(camera);
 

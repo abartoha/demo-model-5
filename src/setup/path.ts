@@ -27,3 +27,27 @@ export const createPath = (radius: number) => {
 
   return mesh;
 };
+
+export const createKeplerianPath = (x, y, z) => {
+  const points: THREE.Vector3[] = [];
+  const count = 1024;
+
+  for (let i = 0; i < count; i++) {
+    points.push(new THREE.Vector3(x, y, z));
+  }
+
+  points.push(new THREE.Vector3(0, 0, 1));
+
+  const material = new THREE.LineBasicMaterial({
+    color: "white",
+    transparent: true,
+    opacity: 0.25,
+  });
+
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+  const mesh = new THREE.Line(geometry, material);
+  mesh.visible = false;
+
+  return mesh;
+};

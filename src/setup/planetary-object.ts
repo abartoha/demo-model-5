@@ -88,11 +88,11 @@ export class PlanetaryObject {
     this.innerRadius = innerRadius / 1000000;
     this.outerRadius = outerRadius / 1000000;
     this.eccentricity = eccentricity;
-    this.inclination = inclination;
+    this.inclination = inclination * 0.01745329;
     this.semiMajorAxis = semiMajorAxis;
-    this.argPerigee = argPerigee;
-    this.raan = raan;
-    this.semiLatusRectum = this.semiMajorAxis * (1 - this.eccentricity ^ 2); 
+    this.argPerigee = argPerigee * 0.01745329;
+    this.raan = raan * 0.01745329;
+    this.semiLatusRectum = this.semiMajorAxis * (1 - this.eccentricity ^ 2);
 
     this.loadTextures(body.textures);
 
@@ -210,14 +210,17 @@ export class PlanetaryObject {
 
   private getRotation = (elapsedTime: number) => {
     // timeFactor converts the angle
+    // Non Keplerian
     return this.daylength ? (elapsedTime * timeFactor) / this.daylength : 0;
   };
 
   private getOrbitRotation = (elapsedTime: number) => {
+    // Keplerian
     return this.daylength ? (elapsedTime * timeFactor) / (this.period * 24) : 0;
   };
 
   private propagate = (elapsedTime: number) => {
+    /// ORBITL PROPAGATOR
     const mValue = (timeFactor / (this.period * 24)) * ((elapsedTime * timeFactor) % (this.period * 24)); // MeanAnomaly
     var eA = 0;
     const tol = 0.0001;  // tolerance
@@ -233,14 +236,14 @@ export class PlanetaryObject {
       else
         eA = eAo;
     }
-    const tAnomaly =  2 * Math.atan(Math.sqrt((1 + this.eccentricity) / (1 - this.eccentricity)) * Math.tan(eA / 2)); // trueAnomaly
+    const tAnomaly = 2 * Math.atan(Math.sqrt((1 + this.eccentricity) / (1 - this.eccentricity)) * Math.tan(eA / 2)); // trueAnomaly
     const r = this.semiLatusRectum / (1 + this.eccentricity * Math.cos(tAnomaly));  // Compute radial distance.
 
     const x = r * (Math.cos(this.argPerigee + tAnomaly) * Math.cos(this.raan) - Math.cos(this.inclination) * Math.sin(this.argPerigee + tAnomaly) * Math.sin(this.raan));
     const y = r * (Math.cos(this.argPerigee + tAnomaly) * Math.sin(this.raan) + Math.cos(this.inclination) * Math.sin(this.argPerigee + tAnomaly) * Math.cos(this.raan));
     const z = r * (Math.sin(this.argPerigee + tAnomaly) * Math.sin(this.inclination));
 
-    return [x,y,z];
+    return [x, y, z];
   }
 
   // private trueToEccentricAnomaly(f) {
@@ -254,30 +257,30 @@ export class PlanetaryObject {
    * @param elapsedTime - number of seconds elapsed.
    */
   tick = (elapsedTime: number) => {
-    // Convert real-time seconds to rotation.
-    if (this.type === "comet") {
-      // Do something for comets
-    }
-    
+
     const rotation = this.getRotation(elapsedTime);
     const orbitRotation = this.getOrbitRotation(elapsedTime);
     const orbit = orbitRotation + this.rng;
 
-    // Circular rotation around orbit.
-    this.mesh.position.x = Math.sin(orbit) * this.distance;
-    // this.mesh.position.y = Math.sin(orbit) * this.distance;
-    this.mesh.position.z = Math.cos(orbit) * this.distance;
-
     if (this.eccentricity > 0) {
       // const 
-      console.log("We got orbit!");
-      console.log(this.eccentricity);
-      const [tx,ty,tz] = this.propagate(elapsedTime);
-      this.mesh.position.x = tz;
-      this.mesh.position.y = tx;
+      // console.log("We got orbit!");
+      // console.log(this.eccentricity);
+      const [tx, ty, tz] = this.propagate(elapsedTime);
+      this.mesh.position.x = tx;
+      this.mesh.position.y = tz;
       this.mesh.position.z = ty;
-      console.log(tx,ty,tz);
+      // console.log(tx, ty, tz);
     }
+
+    else {
+      // Circular rotation around orbit.
+      this.mesh.position.x = Math.sin(orbit) * this.distance;
+      // this.mesh.position.y = Math.sin(orbit) * this.distance;
+      this.mesh.position.z = Math.cos(orbit) * this.distance;
+    }
+
+
 
     if (this.type === "ring") {
       this.mesh.rotation.z = rotation;

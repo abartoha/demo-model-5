@@ -19,8 +19,8 @@
 
 - [ ] Asteroids and Comets
 - [ ] Information panel
-- [ ] Accuracy of distances
-- [ ] Improve shadow quality
+- [x] Accuracy of scale
+- [x] Improve shadow quality
 
 ## Planet Scaling Issue
 
