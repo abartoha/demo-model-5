@@ -60,3 +60,52 @@
 #btn-github {
   display: inline-block;
 }
+
+.row{
+  display: flex;
+  padding: 10px 20px;
+}
+
+input{
+  flex: 1;
+  height: 30px;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-size: 15px;
+  color: white;
+}
+
+button{
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+button .fa-solid{
+  width: 20px;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.result-box ul{
+  border-top: 1px solid #999;
+  padding: 15px 10px;
+}
+
+.result-box ul li{
+  list-style: none;
+  border-radius: 3px;
+  padding: 15px 10px;
+  cursor: pointer;
+}
+
+.result-box ul li:hover{
+  background: grey;
+}
+
+.result-box{
+  max-height: 250px;
+  overflow-y: scroll;
+}

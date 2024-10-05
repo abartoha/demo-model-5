@@ -15,7 +15,6 @@ let availableKeywords = [
     'Io',
     'Europa',
     'Triton'
-
 ];
 
 const resultsBox = document.querySelector(".result-box");

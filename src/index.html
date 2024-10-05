@@ -1,24 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Demo Orrery Model</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Trispace:wght@200;500;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./style.scss" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Demo Orrery Model</title>
+  <title>Project New Scope</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Trispace:wght@200;500;800&display=swap" rel="stylesheet" />
@@ -29,7 +14,7 @@
 <body>
   <div id="loading">
     <div id="welcome">
-      <h1>Project New Scope</h1>
+      <h1>New Scope</h1>
       <p>
         <span id="createdBy">created by</span>
         <span id="name">Team Astrometry</span>
@@ -65,33 +50,6 @@
           />
         </svg>
       </button>
-      <div class="search-box">
-        <div class="row">
-          <input type="text" id="input-box" placeholder="search planet" autocomplete="off">
-          <button><i class="fa-solid fa-magnifying-glass"></i></button>
-        </div>
-        <div class="result-box"></div>
-      </div>
-      <!-- <p>Sun</p> -->
-      <button id="btn-next">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
-          <path
-            d="M10 20A10 10 0 1 0 0 10a10 10 0 0 0 10 10zM8.711 4.3l5.7 5.766L8.7 15.711l-1.4-1.422 4.289-4.242-4.3-4.347z"
-          />
-        </svg>
-      </button>
-     
-    </div>
-    <script src="autocomplete.ts"></script>
-    <script type="module" src="./script.ts"></script>
-  </body>
-</html>
-            d="M12 24a12 12 0 1 1 12-12 12.013 12.013 0 0 1-12 12zm0-22a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2z" />
-          <path
-            d="M12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm0-6a2 2 0 1 0 2 2 2 2 0 0 0-2-2zM11 5h2v2h-2zM11 17h2v2h-2zM17 11h2v2h-2zM5 11h2v2H5zM6 7h2v2H6zM16 7h2v2h-2zM6 15h2v2H6zM16 15h2v2h-2z" />
-        </g>
-      </svg>
-    </button>
     <button id="btn-labels">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
         <g>
@@ -125,10 +83,10 @@
       </svg>
     </button>
     <button id="btn-info">
-      x
+      <i class="fa-solid fa-circle-info"></i>
     </button>
   </div>
-  <div id="info-panel">
+  <!-- <div id="info-panel">
     <table>
       <tr>
         <th>Radius</th>
@@ -151,7 +109,7 @@
         <td id="desc">Our home planet</td>
       </tr>
     </table>
-  </div>
+  </div> -->
   <div class="caption">
     <button id="btn-previous">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
