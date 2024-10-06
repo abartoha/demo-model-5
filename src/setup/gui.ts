@@ -46,7 +46,7 @@ export const createGUI = (
     });
 
   // Control the simulation speed
-  gui.add(options, "speed", 0.1, 10000, 0.1).name("Speed");
+  gui.add(options, "speed", 0.1, 100, 0.1).name("Speed");
 
   gui.hide();
 
